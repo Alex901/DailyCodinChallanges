@@ -15,7 +15,7 @@ import javax.jws.Oneway;
 public class dcMain {
 
 	public static void main(String[] args) {
-		twoHundredAndThirtyFive();
+		sixHundredAndTwentyFour();
 	}
 
 	// Problem 1
@@ -361,8 +361,8 @@ public class dcMain {
 		int min = 0;
 		int max = 0;
 		int comp = 0;
-		
-		if(n[0] > n[1]){
+
+		if (n[0] > n[1]) {
 			max = n[0];
 			min = n[1];
 			comp++;
@@ -371,21 +371,102 @@ public class dcMain {
 			max = n[1];
 			comp++;
 		}
-		
-		for(int i = 2; i < n.length; i++){
-			if(n[i] > max){
+
+		for (int i = 2; i < n.length; i++) {
+			if (n[i] > max) {
 				max = n[i];
 				comp++;
-			} else if(n[i] < min){
+			} else if (n[i] < min) {
 				min = n[i];
-				comp = comp+2;
+				comp = comp + 2;
+			}
+		}
+
+		System.out.println("Min: " + min + " Max: " + max + " in " + comp
+				+ " comparisons");
+
+	}
+
+	private static void sixHundredAndTwentyFour() {
+		// A few of the tests are outside the scope of the task in the test, but
+		// need to find them cornercases! :)
+		String test2 = "()"; // 0
+		String test1 = ")("; // 2
+		String test3 = ")"; // 1
+		String test4 = "("; // 1
+		String test5 = "())"; // 1
+		String test6 = "))("; // 3
+		String test7 = "()b)("; // 3
+		String test8 = "( )"; // 1
+		String test9 = "(())"; // 0
+		String test10 = "))(("; // 4
+		String test11 = ")()("; // 2
+		String test12 = "()(()())()v)( )( ())()";
+		String tests[] = { test1, test2, test3, test4, test5, test6, test7,
+				test8, test9, test10, test11, test12 };
+
+		Boolean open;
+
+		for (String s : tests) {
+			LinkedList indexes = new LinkedList<Integer>();
+			int result = 0, counter=0, indexLastOpening=0;
+			open = false;
+			StringBuilder resultString = new StringBuilder();
+			//int[] correctIndexes = new int[s.length()+1];
+
+			if (s.length() == 0) {
+				System.out.println("Empty string; dumbdumb");
+			} else if (s.length() == 1) { //Only one char
+				result++;
+			} else {
+				for (int i = 0; i < s.length(); i++) {
+					if(s.charAt(i) == '('){
+						if(i == s.length()-1){ //last character in string
+							result++;
+						}else if(!closingAhead(s.substring(i+1))){
+							result++;
+						} else {
+							counter++;
+							indexLastOpening=i;
+						}
+						
+						
+					} else if (s.charAt(i) == ')'){
+						if(counter > 0){
+							indexes.add(indexLastOpening);
+							indexes.add(i);
+							counter--;
+							}  else {
+							result++;
+						} 
+					}
+					else {
+						//invalid character
+						result++;
+					}
+				}
+			}
+			
+			for(int i = 0; i < indexes.size();i++){
+				//System.out.println(indexes.get(i));
+				resultString.append(s.charAt((int) indexes.get(i)));
+			}
+			
+			System.out.println("Removing " + result + " characters, in " + s + " resulting in: " + resultString);
+
+		}
+	}
+
+	private static boolean closingAhead(String s){
+		for(int i = 0; i < s.length(); i++){
+			if(s.charAt(i) == ')'){
+				return true;
 			}
 		}
 		
-		System.out.println("Min: " + min + " Max: " + max + " in " + comp + " comparisons");
-		
+		return false;
 	}
-
+	
 	private static int factAdd(int n) {
 		if (n == 0 || n == 1) {
 			return 1;
